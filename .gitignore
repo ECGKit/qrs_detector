@@ -1,2 +1,13 @@
 .vscode/
 data/
+
+# Visual Studio Intermediate Files
+# -- C, C++ --
+.vs/
+[Dd]ebug/
+[Rr]elease/
+bin/
+*.ipch
+*.sdf
+*.suo
+*.vcxproj.user
