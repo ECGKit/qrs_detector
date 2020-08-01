@@ -1,5 +1,6 @@
 #include "qrs_detection.h"
 #include "filter.h"
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -21,6 +22,19 @@ static void Normalize(double* values, int size);
 static void SubtractDelay(char* qrs_detection_result, int size, int samples_delay);
 
 /*****************************************************************************/
+
+/* https://en.cppreference.com/w/c/numeric/math/round */
+#ifdef HAVE_ROUND
+static inline double Round(double x)
+{
+    return round(x);
+}
+#else
+static double Round(double x)
+{
+    return x < 0.0 ? ceil(x - 0.5) : floor(x + 0.5);
+}
+#endif
 
 int DetectQrsPeaks(double const* signal, int size, char* result, double rate)
 {
@@ -115,7 +129,7 @@ int FilterSignal(double const* signal, int size, double rate, double* output)
     filter = InitFilter(LOWER_HZ, rate, FT_HIGH_PASS);
     FilterData(filter, output, size);
     CloseFilter(&filter);
-    return (int)round(SUM_FILTER_DELAY_SEC * rate);
+    return (int)Round(SUM_FILTER_DELAY_SEC * rate);
 }
 
 void ComputeDerivative(double const* signal, int size, double* output)
