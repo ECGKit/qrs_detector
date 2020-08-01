@@ -20,9 +20,8 @@
             var count = Native.DetectQrsPeaks(signal, signal.Length, positions, samplingRate);
             if (count > 0)
             {
-                return positions.Select((r, i) => new { i, r })
-                    .Where(t => t.r == Native.MARK_QRS)
-                    .Select(t => t.i)
+                return Enumerable.Range(0, positions.Length)
+                    .Where(i => positions[i] == Native.MARK_QRS)
                     .ToArray();
             }
             else
